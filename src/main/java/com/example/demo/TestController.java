@@ -30,14 +30,17 @@ public class TestController {
             log.info("File saved successfully to: " + filePath);
             File file = new File(filePath);
             IInArchive archive;
+            RandomAccessFile randomAccessFile;
             try {
-                archive = SevenZip.openInArchive(null, new RandomAccessFileInStream(
-                        new RandomAccessFile(file, "r")));
+
+                randomAccessFile = new RandomAccessFile(file, "r");
+                archive = SevenZip.openInArchive(null, new RandomAccessFileInStream(randomAccessFile));
                 log.info(String.valueOf(archive.getNumberOfItems()));
             } catch (SevenZipException | FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
             archive.close();
+            randomAccessFile.close();
 
             // 1 method
             Files.delete(Path.of(filePath));
